@@ -1,72 +1,148 @@
-# Experiment 1: Entity-Relationship (ER) Diagram
+# 🧪 Experiment 1: Entity-Relationship (ER) Diagram
 
-## 🎯 Objective:
+## 🎯 Objective
 To understand and apply the concepts of ER modeling by creating an ER diagram for a real-world application.
 
-## 📚 Purpose:
-The purpose of this workshop is to gain hands-on experience in designing ER diagrams that visually represent the structure of a database including entities, relationships, attributes, and constraints.
+## 📚 Purpose
+Gain hands-on experience in designing ER diagrams that visually represent the structure of a database, including entities, relationships, attributes, and constraints.
 
 ---
 
-## 🧪 Choose One Scenario:
-
-### 🔹 Scenario 1: University Database
-Design a database to manage students, instructors, programs, courses, and student enrollments. Include prerequisites for courses.
-
-**User Requirements:**
-- Academic programs grouped under departments.
-- Students have admission number, name, DOB, contact info.
-- Instructors with staff number, contact info, etc.
-- Courses have number, name, credits.
-- Track course enrollments by students and enrollment date.
-- Add support for prerequisites (some courses require others).
+## 🏥 Scenario Chosen: Hospital Database
 
 ---
 
-### 🔹 Scenario 2: Hospital Database
-Design a database for patient management, appointments, medical records, and billing.
+## 🖼️ ER Diagram
 
-**User Requirements:**
-- Patient details including contact and insurance.
-- Doctors and their departments, contact info, specialization.
-- Appointments with reason, time, patient-doctor link.
-- Medical records with treatments, diagnosis, test results.
-- Billing and payment details for each appointment.
+![438538708-4b5c26be-d9da-4cea-b369-df4e7b85d88c](https://github.com/user-attachments/assets/21a064be-ccfc-4f67-9f3c-a459aca128c3)
+
 
 ---
 
-## 📝 Tasks:
-1. Identify entities, relationships, and attributes.
-2. Draw the ER diagram using any tool (draw.io, dbdiagram.io, hand-drawn and scanned).
-3. Include:
-   - Cardinality & participation constraints
-   - Prerequisites for University OR Billing for Hospital
-4. Explain:
-   - Why you chose the entities and relationships.
-   - How you modeled prerequisites or billing.
+## 📦 Entities and Attributes
 
-# ER Diagram Submission - Student Name
+### 1. `PATIENT`
+- `P-ID` (Primary Key)
+- `PH-NO`
+- `AGE`
+- `GENDER`
+- `INSURANCE DETAILS` *(optional)*
 
-## Scenario Chosen:
-University / Hospital (choose one)
+### 2. `DOCTOR`
+- `D-ID` (Primary Key)
+- `NAME`
+- `DEPT`
+- `QUALIFICATION`
+- `SPECIALIZATION`
+- `CONTACT INFO`
 
-## ER Diagram:
-![ER Diagram](er_diagram.png)
+### 3. `NURSE`
+- `N-ID` (Primary Key)
+- `E-ID` (Employee ID)
 
-## Entities and Attributes:
-- Entity1: Attributes
-- Entity2: Attributes
-...
+### 4. `RECEPTIONIST`
+- `R-ID` (Primary Key)
+- `NAME`
+- `E-ID` (Employee ID)
 
-## Relationships and Constraints:
-- Relationship1 (Cardinality, Participation)
-- Relationship2 (Cardinality, Participation)
-...
+### 5. `ROOM`
+- `R-ID` (Primary Key)
+- `TYPE` (e.g., ICU, General)
+- `CAPACITY`
 
-## Extension (Prerequisite / Billing):
-- Explain how you modeled prerequisites or billing.
+### 6. `BILL`
+- `B-ID` (Primary Key)
+- `P-ID` (Foreign Key)
+- `AMOUNT`
+- `DATE`
 
-## Design Choices:
-Brief explanation of why you chose certain entities, relationships, and assumptions
+### 7. `TEST REPORT`
+- `T-ID` (Primary Key)
+- `TEST-TYPE`
+- `P-ID` (Foreign Key)
+- `RESULT`
+- `DATE`
 
-## RESULT
+### 8. `RECORD`
+- `R-NO` (Primary Key)
+- `APP-NO` (Appointment Number)
+- `P-ID` (Foreign Key)
+- `DOCTOR ID`
+- `DIAGNOSIS`
+- `TREATMENT DETAILS`
+
+---
+
+## 🔗 Relationships and Constraints
+
+### 1. `CONSULTS`
+- **Between**: `PATIENT` ↔️ `DOCTOR`
+- **Cardinality**: Many-to-Many (M:N)
+- **Participation**: Total on `PATIENT`, Partial on `DOCTOR`
+
+### 2. `PAYS`
+- **Between**: `PATIENT` → `BILL`
+- **Cardinality**: One-to-Many (1:N)
+- **Participation**: Total on `BILL`, Partial on `PATIENT`
+
+### 3. `HAS`
+- **Between**: `PATIENT` → `TEST REPORT`
+- **Cardinality**: One-to-Many (1:N)
+
+### 4. `GOVERNS`
+- **Between**: `NURSE` ↔️ `ROOM`
+- **Cardinality**: Many-to-Many (M:N)
+
+### 5. `MAINTAINS`
+- **Between**: `RECEPTIONIST` → `RECORD`
+- **Cardinality**: One-to-Many (1:N)
+
+---
+
+## 💳 Billing Extension
+
+### Entities Involved
+- `PATIENT`
+- `BILL`
+
+### Relationship: `PAYS`
+- **Type**: One-to-Many (1:N)
+
+### Explanation:
+Each `PATIENT` may be associated with multiple `BILL` entries using the `PAYS` relationship. Each `BILL` includes:
+- `B-ID`: Unique ID
+- `P-ID`: Foreign key from `PATIENT`
+- `AMOUNT`: Bill amount
+- `DATE`: Payment date
+
+### Benefits:
+- Enables historical tracking of bills per patient
+- Simplifies financial data management
+- Links billing data accurately to patient identity
+
+---
+
+## ⚙️ Design Choices
+
+### Entity Selection
+- `PATIENT`, `DOCTOR`, `NURSE`, `RECEPTIONIST`: Core human actors
+- `ROOM`, `BILL`, `TEST REPORT`, `RECORD`: Operational and data-driven entities
+
+### Relationship Modeling
+- **M:N** for `CONSULTS` and `GOVERNS` to reflect real-world flexibility
+- **1:N** for `PAYS`, `HAS`, `MAINTAINS` for natural ownership and record tracking
+
+### Assumptions
+- Test reports are patient-specific
+- Bills are per appointment or group of services
+- Nurses and doctors work within departments (not deeply modeled here)
+
+---
+
+## ✅ Result
+This ER model captures the essential components of a hospital management system, including:
+- Clear **entities** and **attributes**
+- Well-defined **relationships** with appropriate cardinality
+- Realistic **constraints** mirroring hospital operations
+
+The design supports implementation of a robust relational database or hospital software system.
